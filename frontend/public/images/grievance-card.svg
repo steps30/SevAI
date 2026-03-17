@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" fill="none">
+  <!-- Drop shadow filter -->
+  <defs>
+    <filter id="card-shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="4" dy="8" stdDeviation="18" flood-color="#1a2c5b" flood-opacity="0.22"/>
+    </filter>
+    <filter id="icon-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="1" dy="2" stdDeviation="4" flood-color="#1a2c5b" flood-opacity="0.18"/>
+    </filter>
+    <linearGradient id="card-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0f4ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Tilted card background -->
+  <g transform="rotate(-5, 260, 210)" filter="url(#card-shadow)">
+    <rect x="60" y="60" width="400" height="280" rx="18" fill="url(#card-bg)" stroke="#dce6ff" stroke-width="1.5"/>
+  </g>
+
+  <!-- Straight card on top -->
+  <rect x="75" y="72" width="370" height="258" rx="16" fill="url(#card-bg)" stroke="#dce6ff" stroke-width="1.5" filter="url(#card-shadow)"/>
+
+  <!-- Scales of Justice icon (top-right area) -->
+  <g transform="translate(335, 92)" filter="url(#icon-shadow)">
+    <!-- Beam / balance bar -->
+    <rect x="28" y="30" width="84" height="5" rx="2.5" fill="#17233f"/>
+    <!-- Center post -->
+    <rect x="67" y="10" width="6" height="90" rx="3" fill="#17233f"/>
+    <!-- Top knob -->
+    <circle cx="70" cy="10" r="5" fill="#17233f"/>
+    <!-- Left scale string -->
+    <line x1="30" y1="33" x2="18" y2="58" stroke="#17233f" stroke-width="3" stroke-linecap="round"/>
+    <!-- Right scale string -->
+    <line x1="110" y1="33" x2="122" y2="58" stroke="#17233f" stroke-width="3" stroke-linecap="round"/>
+    <!-- Left pan (tilted slightly down) -->
+    <ellipse cx="18" cy="62" rx="16" ry="6" fill="none" stroke="#17233f" stroke-width="3"/>
+    <!-- Right pan (tilted slightly up) -->
+    <ellipse cx="122" cy="54" rx="16" ry="6" fill="none" stroke="#17233f" stroke-width="3"/>
+    <!-- Base -->
+    <rect x="54" y="100" width="32" height="5" rx="2.5" fill="#17233f"/>
+    <rect x="44" y="105" width="52" height="4" rx="2" fill="#17233f"/>
+  </g>
+
+  <!-- "Grievance" large text -->
+  <text x="102" y="210" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" fill="#17233f" letter-spacing="-1">Grievance</text>
+
+  <!-- Subtitle line -->
+  <text x="104" y="242" font-family="Arial, sans-serif" font-size="15" fill="#4f6187" letter-spacing="2">PORTAL  ·  COMPLAINT MANAGEMENT</text>
+
+  <!-- Thin accent line under subtitle -->
+  <rect x="104" y="255" width="220" height="3" rx="1.5" fill="#3b5bdb" opacity="0.45"/>
+
+  <!-- Small decorative document lines at bottom of card -->
+  <rect x="104" y="278" width="140" height="7" rx="3.5" fill="#dce6ff"/>
+  <rect x="104" y="294" width="100" height="7" rx="3.5" fill="#dce6ff"/>
+</svg>
