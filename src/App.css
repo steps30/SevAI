@@ -1,38 +1,404 @@
-.App {
-  text-align: center;
+.login-main {
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 24px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(170deg, #edf0f8 0 62%, #6d4ce3 62% 74%, #2fd3a4 74% 100%),
+    radial-gradient(980px 420px at 6% 8%, rgba(255, 255, 255, 0.45), transparent 65%);
 }
 
-.App-logo {
-  height: 40vmin;
+.login-brand {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.login-brand p {
+  margin: 0;
+  color: #394260;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 13px;
+}
+
+.login-brand-mark {
+  display: inline-flex;
+  align-items: center;
+}
+
+.login-brand-mark span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid #edf0f8;
+  margin-left: -6px;
+}
+
+.login-brand-mark span:first-child {
+  margin-left: 0;
+}
+
+.login-brand-mark span:nth-child(1) {
+  background: #ff6b6b;
+}
+
+.login-brand-mark span:nth-child(2) {
+  background: #45c8ff;
+}
+
+.login-brand-mark span:nth-child(3) {
+  background: #56c271;
+}
+
+.login-brand-mark span:nth-child(4) {
+  background: #ffd33d;
+}
+
+.login-wrapper {
+  width: min(1040px, 100%);
+  min-height: 560px;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  border-radius: 12px;
+  border: 1px solid rgba(117, 129, 161, 0.25);
+  background: rgba(250, 252, 255, 0.95);
+  box-shadow: 0 28px 60px rgba(20, 34, 80, 0.16);
+  overflow: hidden;
+}
+
+.login-right,
+.login-left {
+  padding: 40px clamp(22px, 4vw, 46px);
+}
+
+.login-divider {
+  background: linear-gradient(180deg, transparent, rgba(123, 134, 161, 0.45), transparent);
+}
+
+.login-right {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  background: linear-gradient(165deg, #f8f9ff, #f0f3fb);
+}
+
+.login-visual-art {
+  width: min(320px, 100%);
+  padding: 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(130px 130px at 16% 86%, rgba(255, 214, 107, 0.5), transparent 70%),
+    radial-gradient(140px 140px at 76% 24%, rgba(64, 167, 255, 0.2), transparent 70%),
+    #eef3fb;
+}
+
+.login-visual-art img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.login-right h2 {
+  margin: 18px 0 6px;
+  font-size: clamp(24px, 2.5vw, 32px);
+  color: #313b5f;
+  letter-spacing: -0.01em;
+}
+
+.login-right p {
+  margin: 0;
+  max-width: 340px;
+  color: #677397;
+  line-height: 1.65;
+  font-size: 14px;
+}
+
+.login-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f7f8fc;
+}
+
+.login-left h2 {
+  margin: 0 0 12px;
+  color: #313b5f;
+  font-size: clamp(24px, 2.5vw, 31px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.login-left h2::before {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 4px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6d4ce3, #4e95ff);
+}
+
+.change-role-btn {
+  width: fit-content;
+  border: 0;
+  background: transparent;
+  color: #6d4ce3;
+  padding: 0;
+  margin: 0 0 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.change-role-btn:hover {
+  color: #4d36ae;
+}
+
+.login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.login-input-wrap {
+  position: relative;
+  display: block;
+}
+
+.login-input-wrap input {
+  width: 100%;
+  height: 52px;
+  border-radius: 999px;
+  border: 1px solid #d8deec;
+  background: #ffffff;
+  padding: 0 46px 0 18px;
+  color: #3c4663;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-input-wrap input::placeholder {
+  color: #9aa6c7;
+}
+
+.login-input-wrap input:focus {
+  outline: none;
+  border-color: #7d65e4;
+  box-shadow: 0 0 0 4px rgba(109, 76, 227, 0.12);
+}
+
+.login-input-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8e9abb;
+  font-weight: 700;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.login-form button {
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #6d4ce3, #5b48ea, #4888f5);
+  font-size: 13px;
+  letter-spacing: 0.35em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.2s ease;
 }
 
-.App-header {
-  background-color: #282c34;
+.login-form button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.login-error {
+  margin: -2px 2px 0;
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.login-support-text {
+  margin: 2px 0 0;
+  color: #8591b1;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Role select page */
+.role-select-main {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(168deg, #eef2fb 0 66%, #6d4ce3 66% 78%, #2fd3a4 78% 100%),
+    radial-gradient(900px 420px at 7% 8%, rgba(255, 255, 255, 0.45), transparent 65%);
 }
 
-.App-link {
-  color: #61dafb;
+.role-select-card {
+  width: min(840px, 100%);
+  border: 1px solid rgba(117, 129, 161, 0.26);
+  border-radius: 12px;
+  background: rgba(250, 252, 255, 0.95);
+  padding: clamp(22px, 4vw, 34px);
+  box-shadow: 0 28px 60px rgba(20, 34, 80, 0.16);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.role-select-kicker {
+  margin: 0;
+  color: #6d4ce3;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.role-select-title {
+  margin: 10px 0 8px;
+  color: #313b5f;
+  font-size: clamp(28px, 5vw, 40px);
+  letter-spacing: -0.02em;
+}
+
+.role-select-subtitle {
+  margin: 0 0 22px;
+  color: #667294;
+}
+
+.role-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.role-card {
+  border: 1px solid #d8deec;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-2px);
+  border-color: #8067e8;
+  box-shadow: 0 14px 28px rgba(70, 81, 117, 0.16);
+}
+
+.role-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ece6ff, #deedff);
+  font-size: 20px;
+}
+
+.role-name {
+  color: #313b5f;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.role-hint {
+  color: #6f7da2;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+html[data-theme="dark"] .login-main,
+html[data-theme="dark"] .role-select-main {
+  background:
+    linear-gradient(168deg, #1c2438 0 64%, #4d36ae 64% 77%, #169f7d 77% 100%),
+    radial-gradient(900px 420px at 7% 8%, rgba(255, 255, 255, 0.1), transparent 65%);
+}
+
+html[data-theme="dark"] .login-brand p {
+  color: #d4dcf6;
+}
+
+html[data-theme="dark"] .login-wrapper,
+html[data-theme="dark"] .role-select-card {
+  background: rgba(18, 26, 43, 0.93);
+  border-color: rgba(122, 144, 186, 0.3);
+}
+
+html[data-theme="dark"] .login-right,
+html[data-theme="dark"] .login-left {
+  background: transparent;
+}
+
+html[data-theme="dark"] .login-right h2,
+html[data-theme="dark"] .login-left h2,
+html[data-theme="dark"] .role-select-title,
+html[data-theme="dark"] .role-name {
+  color: #edf2ff;
+}
+
+html[data-theme="dark"] .login-right p,
+html[data-theme="dark"] .role-select-subtitle,
+html[data-theme="dark"] .role-hint,
+html[data-theme="dark"] .login-support-text {
+  color: #a9b9dd;
+}
+
+html[data-theme="dark"] .login-input-wrap input,
+html[data-theme="dark"] .role-card {
+  background: #15223b;
+  border-color: rgba(122, 144, 186, 0.3);
+  color: #eaf0ff;
+}
+
+html[data-theme="dark"] .login-input-wrap input::placeholder {
+  color: #8fa1c7;
+}
+
+html[data-theme="dark"] .change-role-btn,
+html[data-theme="dark"] .role-select-kicker {
+  color: #9eb4ff;
+}
+
+@media (max-width: 920px) {
+  .login-wrapper {
+    grid-template-columns: 1fr;
   }
-  to {
-    transform: rotate(360deg);
+
+  .login-divider {
+    display: none;
+  }
+
+  .login-right {
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .login-main,
+  .role-select-main {
+    padding: 14px;
+  }
+
+  .role-select-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-form button {
+    letter-spacing: 0.22em;
   }
 }

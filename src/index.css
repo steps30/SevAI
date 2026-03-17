@@ -1,13 +1,365 @@
+:root {
+  --bg: #eef3ff;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-strong: #ffffff;
+  --surface-soft: #f1f5ff;
+  --text: #17233f;
+  --text-muted: #4f6187;
+  --border: rgba(123, 143, 190, 0.3);
+  --primary: #5969f6;
+  --primary-strong: #4456e6;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --shadow-soft: 0 12px 26px rgba(18, 34, 78, 0.14);
+  --shadow-strong: 0 28px 62px rgba(18, 34, 78, 0.2);
+  --radius-lg: 16px;
+  --radius-md: 10px;
+}
+
+html[data-theme="dark"] {
+  --bg: #090f24;
+  --surface: rgba(14, 20, 46, 0.92);
+  --surface-strong: #121a3d;
+  --surface-soft: #1a2753;
+  --text: #eef3ff;
+  --text-muted: #9eb1df;
+  --border: rgba(116, 137, 192, 0.28);
+  --primary: #7684ff;
+  --primary-strong: #616fec;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --shadow-soft: 0 14px 34px rgba(2, 6, 23, 0.6);
+  --shadow-strong: 0 36px 80px rgba(2, 6, 23, 0.74);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Manrope", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 620px at -8% -12%, rgba(89, 105, 246, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 108% 0%, rgba(43, 179, 168, 0.12), transparent 58%),
+    var(--bg);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(1200px 620px at -8% -12%, rgba(118, 132, 255, 0.24), transparent 60%),
+    radial-gradient(900px 500px at 108% 0%, rgba(20, 184, 166, 0.16), transparent 58%),
+    var(--bg);
+}
+
+::selection {
+  background: rgba(111, 124, 255, 0.34);
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #dbe6ff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8ca1d4;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6e84bf;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: Consolas, Menlo, Monaco, monospace;
+}
+
+/* Professional UI Overrides */
+.sev-nav-inner,
+.login-wrapper,
+.role-select-card,
+.home2-hero,
+.home2-impact-strip,
+.home2-process,
+.home2-final-cta,
+.home2-footer,
+.dashboard-shell,
+.complaint-shell,
+.admin-shell,
+.track-page,
+.profile-card {
+  border-color: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.sev-navbar {
+  background: linear-gradient(180deg, rgba(221, 229, 248, 0.8), rgba(221, 229, 248, 0));
+}
+
+.sev-title,
+.home2-title,
+.dashboard-title,
+.track-header h1,
+.admin-top h1,
+.profile-head-user h2,
+.login-left h2,
+.role-select-title {
+  letter-spacing: -0.03em;
+}
+
+.sev-link.active,
+.language-toggle-btn.active {
+  background: linear-gradient(95deg, rgba(111, 124, 255, 0.28), rgba(31, 189, 172, 0.22));
+  color: var(--text);
+}
+
+.theme-toggle,
+.profile-circle,
+.home2-btn.primary,
+.home2-final-cta button,
+.track-search button,
+button.primary,
+button.submit,
+.login-form button {
+  background: linear-gradient(95deg, #6f7cff, #5d6cf4 50%, #2bb3a8);
+  box-shadow: 0 12px 26px rgba(77, 94, 206, 0.35);
+}
+
+.theme-toggle,
+.home2-btn.secondary,
+.home2-footer-links button,
+button.secondary,
+button.ghost,
+.change-role-btn,
+.role-card,
+.complaint-card,
+.admin-card,
+.complaint-row,
+.track-summary,
+.track-progress-panel {
+  border-color: var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.home2-kicker,
+.role-select-kicker,
+.footer-chip,
+.badge,
+.row-status,
+.admin-status-pill,
+.step-index {
+  border-color: rgba(111, 124, 255, 0.45);
+  background: rgba(111, 124, 255, 0.2);
+  color: var(--primary);
+}
+
+.home2-language-card,
+.dashboard-visual,
+.upload-box,
+.empty-state,
+.admin-empty {
+  border-color: var(--border);
+  background: linear-gradient(130deg, rgba(111, 124, 255, 0.12), rgba(255, 255, 255, 0.74));
+}
+
+.dashboard-search,
+.track-search-input-wrap,
+.admin-search,
+.login-input-wrap input,
+.field input,
+.field select,
+.field textarea,
+.profile-line input,
+.admin-filters select,
+.admin-actions input,
+.admin-actions select,
+.admin-note-wrap textarea {
+  border-color: var(--border);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.login-input-wrap input::placeholder,
+.field input::placeholder,
+.field textarea::placeholder,
+.profile-line input::placeholder,
+.admin-note-wrap textarea::placeholder {
+  color: #7386b2;
+}
+
+.home2-hero-image,
+.dashboard-visual img,
+.complaint-visual,
+.admin-evidence,
+.track-image img,
+.preview img {
+  border-color: var(--border);
+}
+
+.home2-footer-col,
+.step-item,
+.stat,
+.meta-card,
+.timeline li,
+.row-grid {
+  border-color: var(--border);
+  background: var(--surface-soft);
+}
+
+.stat::before,
+.process-line,
+.login-left h2::before,
+.login-left h2::after {
+  background: linear-gradient(90deg, #6f7cff, #2bb3a8);
+}
+
+.login-main,
+.role-select-main {
+  background:
+    radial-gradient(900px 360px at 0% 0%, rgba(111, 124, 255, 0.22), transparent 62%),
+    radial-gradient(760px 360px at 100% 100%, rgba(43, 179, 168, 0.16), transparent 62%),
+    linear-gradient(160deg, #edf2ff, #e7efff);
+}
+
+.login-right {
+  background: linear-gradient(160deg, rgba(111, 124, 255, 0.18), rgba(255, 255, 255, 0.8));
+}
+
+.login-brand p,
+.home2-subtitle,
+.dashboard-subtitle,
+.track-header p,
+.admin-top p,
+.row-id,
+.muted,
+.role-hint,
+.home2-footer-col p,
+.home2-footer-bottom,
+.timeline .tl-time,
+.step-label,
+.impact-label,
+.login-support-text,
+.login-right p,
+.role-select-subtitle,
+.typing-hint,
+.geo-label {
+  color: var(--text-muted);
+}
+
+.home2-btn:hover,
+.home2-footer-links button:hover,
+.role-card:hover,
+.step-item:hover,
+.profile-circle:hover,
+.sev-link:hover,
+.stat:hover,
+.complaint-row:hover,
+.admin-card:hover {
+  transform: translateY(-2px);
+}
+
+html[data-theme="dark"] .sev-navbar {
+  background: linear-gradient(180deg, rgba(10, 15, 35, 0.82), rgba(10, 15, 35, 0));
+}
+
+html[data-theme="dark"] .home2-kicker,
+html[data-theme="dark"] .role-select-kicker,
+html[data-theme="dark"] .footer-chip,
+html[data-theme="dark"] .badge,
+html[data-theme="dark"] .row-status,
+html[data-theme="dark"] .admin-status-pill,
+html[data-theme="dark"] .step-index {
+  color: #cdd8ff;
+}
+
+html[data-theme="dark"] .home2-language-card,
+html[data-theme="dark"] .dashboard-visual,
+html[data-theme="dark"] .upload-box,
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .admin-empty {
+  background: linear-gradient(130deg, rgba(111, 124, 255, 0.12), rgba(22, 34, 72, 0.5));
+}
+
+html[data-theme="dark"] .dashboard-search,
+html[data-theme="dark"] .track-search-input-wrap,
+html[data-theme="dark"] .admin-search,
+html[data-theme="dark"] .login-input-wrap input,
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] .profile-line input,
+html[data-theme="dark"] .admin-filters select,
+html[data-theme="dark"] .admin-actions input,
+html[data-theme="dark"] .admin-actions select,
+html[data-theme="dark"] .admin-note-wrap textarea {
+  background: rgba(12, 18, 44, 0.64);
+}
+
+html[data-theme="dark"] .login-input-wrap input::placeholder,
+html[data-theme="dark"] .field input::placeholder,
+html[data-theme="dark"] .field textarea::placeholder,
+html[data-theme="dark"] .profile-line input::placeholder,
+html[data-theme="dark"] .admin-note-wrap textarea::placeholder {
+  color: #94a6d5;
+}
+
+html[data-theme="dark"] .login-main,
+html[data-theme="dark"] .role-select-main {
+  background:
+    radial-gradient(900px 360px at 0% 0%, rgba(111, 124, 255, 0.26), transparent 62%),
+    radial-gradient(760px 360px at 100% 100%, rgba(43, 179, 168, 0.2), transparent 62%),
+    linear-gradient(160deg, #11183a, #0f1633);
+}
+
+html[data-theme="dark"] .login-right {
+  background: linear-gradient(160deg, rgba(111, 124, 255, 0.14), rgba(21, 30, 66, 0.76));
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #0e1430;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #44579c;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #5a6ec0;
+}
+
+@media (max-width: 760px) {
+  .sev-nav-inner,
+  .dashboard-shell,
+  .complaint-shell,
+  .admin-shell,
+  .track-page,
+  .profile-card,
+  .home2-hero,
+  .home2-footer,
+  .login-wrapper,
+  .role-select-card {
+    border-radius: 14px;
+  }
 }
