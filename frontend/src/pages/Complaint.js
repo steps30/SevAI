@@ -397,7 +397,7 @@ function Complaint() {
   };
 
   // --- Submit ---
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.phone || !formData.complaint) {
       alert(L.required);
       return;
@@ -424,23 +424,27 @@ function Complaint() {
       return;
     }
 
-    const existing = JSON.parse(localStorage.getItem("complaints")) || [];
-    const existingIds = new Set(existing.map((item) => item.trackingId));
-    const trackingId = buildUniqueTrackingId(formData.department, existingIds);
+    try {
+    const response = await fetch("http://127.0.0.1:5000/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        complaint: formData.complaint,
+        area: formData.area,
+        name: formData.name,
+        phone: formData.phone,
+        department: formData.department,
+        image: formData.image || ""
+      })
+    });
 
-    const newComplaint = {
-      id: Date.now(),
-      trackingId,
-      ...formData,
-      status: "Pending",
-      date: new Date().toISOString(), // ISO for time-based escalation
-    };
+    const data = await response.json();
 
-    existing.push(newComplaint);
-    localStorage.setItem("complaints", JSON.stringify(existing));
+    alert(`Complaint submitted!\nTracking ID: ${data.trackingId}`);
 
-    alert(`${L.submitted}\n${L.trackingId}: ${trackingId}`);
-
+    // Reset form after submit
     setFormData({
       name: "",
       phone: "",
@@ -455,7 +459,12 @@ function Complaint() {
       image: "",
       photoGeo: null,
     });
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert("Error submitting complaint");
+  }
+};
 
   return (
     <motion.div

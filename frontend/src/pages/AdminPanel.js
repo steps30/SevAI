@@ -15,30 +15,31 @@ function AdminPanel({ adminDepartment, adminId }) {
   const common = text.common;
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("complaints")) || [];
-    setComplaints(stored);
-  }, []);
+  fetch("http://127.0.0.1:5000/admin")
+    .then(res => res.json())
+    .then(data => setComplaints(data))
+    .catch(err => console.error(err));
+}, []);
 
-  const persistComplaints = (next) => {
-    setComplaints(next);
-    localStorage.setItem("complaints", JSON.stringify(next));
-    window.dispatchEvent(new Event("complaints-updated"));
-  };
-
-  const updateComplaint = (id, changes) => {
-    const nowIso = new Date().toISOString();
-    const next = complaints.map((item) => {
-      if (item.id !== id) return item;
-
-      return {
-        ...item,
-        ...changes,
-        updatedAt: nowIso,
-      };
+  const updateComplaint = async (trackingId, changes) => {
+  try {
+    await fetch(`http://127.0.0.1:5000/update/${trackingId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(changes)
     });
 
-    persistComplaints(next);
-  };
+    // refresh data
+    const res = await fetch("http://127.0.0.1:5000/admin");
+    const data = await res.json();
+    setComplaints(data);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const scopedComplaints = useMemo(() => {
     if (!adminDepartment) {
@@ -164,7 +165,7 @@ function AdminPanel({ adminDepartment, adminId }) {
                     {admin.status}
                     <select
                       value={c.status || "Pending"}
-                      onChange={(e) => updateComplaint(c.id, { status: e.target.value })}
+                      onChange={(e) => updateComplaint(c.trackingId, { status: e.target.value })}
                     >
                       {STATUS_OPTIONS.map((s) => (
                         <option key={s} value={s}>{translateStatus(s)}</option>
@@ -178,7 +179,7 @@ function AdminPanel({ adminDepartment, adminId }) {
                       type="text"
                       value={c.assignedOfficer || ""}
                       placeholder={admin.officerPlaceholder}
-                      onChange={(e) => updateComplaint(c.id, { assignedOfficer: e.target.value })}
+                      onChange={(e) => updateComplaint(c.trackingId, { assignedOfficer: e.target.value })}
                     />
                   </label>
                 </div>
@@ -189,7 +190,7 @@ function AdminPanel({ adminDepartment, adminId }) {
                     rows={3}
                     value={c.adminNote || ""}
                     placeholder={admin.notePlaceholder}
-                    onChange={(e) => updateComplaint(c.id, { adminNote: e.target.value })}
+                    onChange={(e) => updateComplaint(c.trackingId, { adminNote: e.target.value })}
                   />
                 </label>
 

@@ -4,9 +4,10 @@ function MyComplaints() {
   const [my, setMy] = useState([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("complaints")) || [];
-    setMy(stored);   // ✅ Show all complaints
-  }, []);
+  fetch("http://127.0.0.1:5000/admin")
+    .then(res => res.json())
+    .then(data => setMy(data));
+}, []);
 
   return (
     <div className="container">

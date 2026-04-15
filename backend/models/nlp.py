@@ -1,5 +1,5 @@
-def predict_category(text):
-    text = text.lower()
+def predict_category(complaint):
+    text = complaint.lower()
 
     if "garbage" in text:
         return "Garbage"
@@ -13,8 +13,8 @@ def predict_category(text):
         return "General"
 
 
-def sentiment_score(text):
-    text = text.lower()
+def sentiment_score(complaint):
+    text = complaint.lower()
 
     negative_words = ["bad", "dirty", "broken", "problem", "danger"]
 

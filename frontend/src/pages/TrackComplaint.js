@@ -24,20 +24,26 @@ function TrackComplaint() {
     return 0;
   };
 
-  const findComplaintById = useCallback((id) => {
-    const complaints = JSON.parse(localStorage.getItem("complaints")) || [];
-    return complaints.find(
+  const findComplaintById = useCallback(async (id) => {
+  try {
+    const res = await fetch("http://127.0.0.1:5000/admin");
+    const data = await res.json();
+
+    return data.find(
       (item) =>
-        String(item.trackingId || "").toLowerCase() === id.toLowerCase() ||
-        String(item.id || "") === id
+        String(item.trackingId || "").toLowerCase() === id.toLowerCase()
     );
-  }, []);
+
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}, []);
 
   const buildResult = useCallback((found) => {
     const baseStatus = found.status || "Pending";
-    const createdAt = new Date(found.date || Date.now()).toLocaleString();
-    const lastUpdated = new Date(found.updatedAt || found.date || Date.now()).toLocaleString();
-
+    const createdAt = new Date(found.created_at?.$date || found.created_at || Date.now());
+    const lastUpdated = new Date(found.created_at?.$date || found.created_at || Date.now());
     const timeline = [
       { status: "Registered", time: createdAt },
       ...(baseStatus !== "Pending" ? [{ status: baseStatus, time: lastUpdated }] : []),
@@ -45,7 +51,7 @@ function TrackComplaint() {
     ];
 
     return {
-      id: found.trackingId || found.id,
+      id: found.trackingId,
       status: baseStatus,
       department: found.department || "General",
       updated: lastUpdated,
@@ -56,7 +62,7 @@ function TrackComplaint() {
     };
   }, []);
 
-  const handleTrack = () => {
+  const handleTrack = async () => {
     const id = complaintId.trim();
 
     if (!id) {
@@ -65,7 +71,7 @@ function TrackComplaint() {
       return;
     }
 
-    const found = findComplaintById(id);
+    const found = await findComplaintById(id);
 
     if (!found) {
       setError(track.notFoundError);
@@ -77,35 +83,7 @@ function TrackComplaint() {
     setResult(buildResult(found));
   };
 
-  useEffect(() => {
-    if (!result?.id) return;
-
-    const refreshCurrent = () => {
-      const found = findComplaintById(String(result.id));
-      if (found) {
-        setResult(buildResult(found));
-      }
-    };
-
-    const handleStorage = (e) => {
-      if (!e.key || e.key === "complaints") refreshCurrent();
-    };
-
-    const handleComplaintsUpdated = () => {
-      refreshCurrent();
-    };
-
-    window.addEventListener("storage", handleStorage);
-    window.addEventListener("focus", refreshCurrent);
-    window.addEventListener("complaints-updated", handleComplaintsUpdated);
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-      window.removeEventListener("focus", refreshCurrent);
-      window.removeEventListener("complaints-updated", handleComplaintsUpdated);
-    };
-  }, [buildResult, findComplaintById, result?.id]);
-
+  
   return (
     <motion.div
       className="track-page"

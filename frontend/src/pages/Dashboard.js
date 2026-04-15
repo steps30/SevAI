@@ -11,31 +11,11 @@ function Dashboard() {
   const dashboard = text.dashboard;
 
   useEffect(() => {
-    const loadComplaints = () => {
-      const stored = JSON.parse(localStorage.getItem("complaints")) || [];
-      setComplaints(stored);
-    };
-
-    loadComplaints();
-
-    const handleStorage = (e) => {
-      if (!e.key || e.key === "complaints") loadComplaints();
-    };
-
-    const handleComplaintsUpdated = () => {
-      loadComplaints();
-    };
-
-    window.addEventListener("storage", handleStorage);
-    window.addEventListener("focus", loadComplaints);
-    window.addEventListener("complaints-updated", handleComplaintsUpdated);
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-      window.removeEventListener("focus", loadComplaints);
-      window.removeEventListener("complaints-updated", handleComplaintsUpdated);
-    };
-  }, []);
+  fetch("http://127.0.0.1:5000/admin")
+    .then(res => res.json())
+    .then(data => setComplaints(data))
+    .catch(err => console.error(err));
+}, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -125,7 +105,7 @@ function Dashboard() {
               return (
                 <motion.div
                   className="complaint-row"
-                  key={c.id}
+                  key={c.trackingId}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.24 }}
@@ -134,7 +114,7 @@ function Dashboard() {
                   <div className="row-head">
                     <div>
                       <h3 className="row-title">{getLocalizedDepartmentLabel(c.department, language)} {dashboard.complaintSuffix}</h3>
-                      <p className="row-id">{dashboard.id}: {c.trackingId || c.id}</p>
+                      <p className="row-id">{dashboard.id}: {c.trackingId}</p>
                     </div>
                     <span className="row-status">{translateStatus(c.status || "Pending")}</span>
                   </div>
