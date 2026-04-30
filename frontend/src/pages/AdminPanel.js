@@ -14,51 +14,48 @@ function AdminPanel({ adminDepartment, adminId }) {
   const admin = text.admin;
   const common = text.common;
 
+  // 1. Fetch from your Live AI Backend
   useEffect(() => {
-  fetch("http://127.0.0.1:5000/admin")
-    .then(res => res.json())
-    .then(data => setComplaints(data))
-    .catch(err => console.error(err));
-}, []);
+    fetch("http://127.0.0.1:5001/admin")
+      .then(res => res.json())
+      .then(data => setComplaints(data))
+      .catch(err => console.error("Error fetching admin data:", err));
+  }, []);
 
+  // 2. Update Status and freeze Time Escalation
   const updateComplaint = async (trackingId, changes) => {
-  try {
-    await fetch(`http://127.0.0.1:5000/update/${trackingId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(changes)
-    });
+    try {
+      await fetch(`http://127.0.0.1:5001/update/${trackingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(changes)
+      });
 
-    // refresh data
-    const res = await fetch("http://127.0.0.1:5000/admin");
-    const data = await res.json();
-    setComplaints(data);
+      // Refresh data so the UI sorts instantly based on the new math
+      const res = await fetch("http://127.0.0.1:5001/admin");
+      const data = await res.json();
+      setComplaints(data);
 
-  } catch (err) {
-    console.error(err);
-  }
-};
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
+  };
 
   const scopedComplaints = useMemo(() => {
-    if (!adminDepartment) {
-      return complaints;
-    }
-
+    if (!adminDepartment) return complaints;
     return complaints.filter((c) => c.department === adminDepartment);
   }, [complaints, adminDepartment]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-
     return scopedComplaints.filter((c) => {
       const statusOk = statusFilter === "All" || (c.status || "Pending") === statusFilter;
       if (!statusOk) return false;
-
       if (!q) return true;
 
-      const haystack = `${c.trackingId || ""} ${c.name || ""} ${c.phone || ""} ${c.department || ""} ${c.complaint || ""} ${c.status || ""} ${c.adminNote || ""}`.toLowerCase();
+      const haystack = `${c.trackingId || ""} ${c.name || ""} ${c.department || ""} ${c.complaint || ""} ${c.status || ""}`.toLowerCase();
       return haystack.includes(q);
     });
   }, [scopedComplaints, search, statusFilter]);
@@ -70,7 +67,6 @@ function AdminPanel({ adminDepartment, adminId }) {
     const inProgress = scopedComplaints.filter((c) => (c.status || "") === "In Progress").length;
     const resolved = scopedComplaints.filter((c) => (c.status || "") === "Resolved").length;
     const rejected = scopedComplaints.filter((c) => (c.status || "") === "Rejected").length;
-
     return { total, pending, assigned, inProgress, resolved, rejected };
   }, [scopedComplaints]);
 
@@ -85,20 +81,15 @@ function AdminPanel({ adminDepartment, adminId }) {
         <div className="admin-top">
           <div>
             <h1>{admin.title}</h1>
-            <p>
-              {admin.subtitle}
-              {adminDepartment ? ` ${getLocalizedDepartmentLabel(adminDepartment, language)}.` : ""}
-              {adminId ? ` (${admin.id}: ${adminId})` : ""}
-            </p>
+            <p>Live AI Triage Dashboard</p>
           </div>
 
           <div className="admin-filters">
-            <div className="language-toggle admin-language-toggle" role="group" aria-label={common.language}>
+            <div className="language-toggle admin-language-toggle" role="group">
               <button
                 type="button"
                 className={language === "en" ? "language-toggle-btn active" : "language-toggle-btn"}
                 onClick={() => setLanguage("en")}
-                title={common.toggleToEnglish}
               >
                 {common.english}
               </button>
@@ -106,7 +97,6 @@ function AdminPanel({ adminDepartment, adminId }) {
                 type="button"
                 className={language === "ta" ? "language-toggle-btn active" : "language-toggle-btn"}
                 onClick={() => setLanguage("ta")}
-                title={common.toggleToTamil}
               >
                 {common.tamil}
               </button>
@@ -145,20 +135,54 @@ function AdminPanel({ adminDepartment, adminId }) {
           <div className="admin-list">
             {filtered.map((c) => (
               <motion.div
-                key={c.id}
+                key={c.trackingId || c.id}
                 className="admin-card"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
+                style={{ borderLeft: `6px solid ${c.priority > 60 ? '#d9534f' : c.priority > 30 ? '#f0ad4e' : '#5cb85c'}` }}
               >
                 <div className="admin-card-head">
                   <div>
                     <h3>{getLocalizedDepartmentLabel(c.department, language)}</h3>
-                    <p>{admin.id}: {c.trackingId || c.id} • {c.name || "-"} • {c.phone || "-"}</p>
+                    <p>ID: {c.trackingId} • {c.name || "Anonymous"} • {c.phone || "-"}</p>
+                    {c.location && c.location.coordinates && (
+                      <p style={{ fontSize: '0.85em', color: '#0066cc' }}>
+                        📍 GPS: {c.location.coordinates[1].toFixed(4)}, {c.location.coordinates[0].toFixed(4)}
+                      </p>
+                    )}
                   </div>
                   <span className="admin-status-pill">{translateStatus(c.status || "Pending")}</span>
                 </div>
 
                 <p className="admin-desc">{c.complaint || admin.noDescription}</p>
+
+                {/* THE AI TRIAGE METRICS DASHBOARD */}
+                <div style={{ background: '#f8f9fa', padding: '12px', borderRadius: '8px', margin: '15px 0', border: '1px solid #e9ecef' }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#495057', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>🤖 AI Priority Engine</span>
+                    <span style={{ color: c.priority > 60 ? '#d9534f' : '#333' }}>
+                      Score: {c.priority ? c.priority.toFixed(2) : "0.00"}
+                    </span>
+                  </h4>
+
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', fontSize: '0.85em' }}>
+                    <div style={{ padding: '6px 10px', background: '#e9ecef', borderRadius: '4px' }}>
+                      <strong>Severity (DAR):</strong> {c.severity_score ? c.severity_score.toFixed(1) : "0"}
+                    </div>
+                    <div style={{ padding: '6px 10px', background: c.is_authentic ? '#dff0d8' : '#f2dede', borderRadius: '4px', color: c.is_authentic ? '#3c763d' : '#a94442' }}>
+                      <strong>Handshake:</strong> {c.is_authentic ? "✅ Verified" : `❌ Penalty (x${c.auth_multiplier})`}
+                    </div>
+                    <div style={{ padding: '6px 10px', background: '#e9ecef', borderRadius: '4px' }}>
+                      <strong>Cluster Penalty:</strong> +{c.duplicate_points || 0} pts
+                    </div>
+                    <div style={{ padding: '6px 10px', background: '#e9ecef', borderRadius: '4px' }}>
+                      <strong>Time Escalation:</strong> +{c.time_points ? c.time_points.toFixed(2) : "0"} pts
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '8px', fontSize: '0.8em', color: '#6c757d' }}>
+                    <strong>AI Vision:</strong> {c.image_category || "GENERAL"} | <strong>AI NLP:</strong> {c.text_category || "GENERAL"}
+                  </div>
+                </div>
 
                 <div className="admin-actions">
                   <label>
@@ -187,16 +211,23 @@ function AdminPanel({ adminDepartment, adminId }) {
                 <label className="admin-note-wrap">
                   {admin.adminNote}
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={c.adminNote || ""}
                     placeholder={admin.notePlaceholder}
                     onChange={(e) => updateComplaint(c.trackingId, { adminNote: e.target.value })}
                   />
                 </label>
 
+                {/* THE IMAGE BLOCK */}
                 {c.image && (
-                  <img src={c.image} alt={admin.evidenceAlt} className="admin-evidence" />
+                  <img
+                    src={c.image}
+                    alt={admin.evidenceAlt || "Citizen Evidence"}
+                    className="admin-evidence"
+                    style={{ objectFit: 'cover' }}
+                  />
                 )}
+
               </motion.div>
             ))}
           </div>

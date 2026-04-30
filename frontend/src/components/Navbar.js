@@ -19,7 +19,6 @@ function Navbar({ theme, setTheme, selectedRole }) {
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className="sev-nav-inner">
-
         <div className="sev-brand">
           <span className="sev-dot" />
           <span className="sev-title">{common.brandName}</span>
@@ -44,6 +43,15 @@ function Navbar({ theme, setTheme, selectedRole }) {
               isActive ? "sev-link active" : "sev-link"
             }>
               {nav.complaint}
+            </NavLink>
+          )}
+
+          {/* ADDED: The missing My Complaints link for citizens */}
+          {!isAdmin && (
+            <NavLink to="/my-complaints" className={({ isActive }) =>
+              isActive ? "sev-link active" : "sev-link"
+            }>
+              {language === "ta" ? "எனது புகார்கள்" : "My Complaints"}
             </NavLink>
           )}
 
@@ -100,15 +108,15 @@ function Navbar({ theme, setTheme, selectedRole }) {
             <span>{theme === "light" ? `🌙 ${nav.themeDark}` : `☀️ ${nav.themeLight}`}</span>
           </button>
 
-          {/* Profile Circle */}
+          {/* Profile Circle dynamically updates color and icon based on Role */}
           <button
             type="button"
-            className="profile-circle"
+            className={`profile-circle ${isAdmin ? "admin-circle" : ""}`}
             onClick={() => navigate("/profile")}
             aria-label={nav.profile}
             title={nav.profile}
           >
-            <span className="profile-circle-icon" aria-hidden="true">👤</span>
+            <span className="profile-circle-icon" aria-hidden="true">{isAdmin ? "🛡️" : "👤"}</span>
           </button>
 
         </nav>

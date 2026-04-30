@@ -3,18 +3,17 @@ import { motion } from "framer-motion";
 import Sanscript from "sanscript";
 import exifr from "exifr";
 import { useLanguage } from "../context/LanguageContext";
-import { departmentOptions } from "../i18n/departments";
 import { buildPhotoGeoMapUrl, getPhotoGeoSourceLabel } from "../utils/photoGeo";
 import "./complaint.css";
 
 const tamilConsonants = [
-  "க","ங","ச","ஞ","ட","ண","த","ந","ப","ம","ய","ர","ல","வ","ழ","ள","ற","ன",
-  "ஜ","ஶ","ஷ","ஸ","ஹ","க்ஷ",
+  "க", "ங", "ச", "ஞ", "ட", "ண", "த", "ந", "ப", "ம", "ய", "ர", "ல", "வ", "ழ", "ள", "ற", "ன",
+  "ஜ", "ஶ", "ஷ", "ஸ", "ஹ", "க்ஷ",
 ];
 const tamilSpecialLetters = ["ஃ", "ஸ்ரீ"];
 // index 0 = pure consonant (no sign), indices 1-12 = vowel signs
-const tamilVowelSigns = ["","ா","ி","ீ","ு","ூ","ெ","ே","ை","ொ","ோ","ௌ","்"];
-const vowelColHeaders = ["அ","ஆ","இ","ஈ","உ","ஊ","எ","ஏ","ஐ","ஒ","ஓ","ஔ","க்"];
+const tamilVowelSigns = ["", "ா", "ி", "ீ", "ு", "ூ", "ெ", "ே", "ை", "ொ", "ோ", "ௌ", "்"];
+const vowelColHeaders = ["அ", "ஆ", "இ", "ஈ", "உ", "ஊ", "எ", "ஏ", "ஐ", "ஒ", "ஓ", "ஔ", "க்"];
 
 function Complaint() {
   const { language, setLanguage, text } = useLanguage();
@@ -22,18 +21,22 @@ function Complaint() {
   const L = text.complaint;
   const common = text.common;
 
+  // 1. PERFECT INITIALIZATION: Fetch Name, Email, and Phone securely from local storage
+  const savedName = localStorage.getItem("currentUserName") || "";
+  const savedEmail = localStorage.getItem("currentUserEmail") || "";
+  const savedPhone = localStorage.getItem("currentUserPhone") || "";
+
   // --- Form state ---
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
+    name: savedName,
+    phone: savedPhone, // Pre-fills phone if available!
+    email: savedEmail, // Pre-fills the email properly!
     street: "",
     area: "",
     pin: "",
     filledBy: "",
     filledByOther: "",
     complaint: "",
-    department: "",
     image: "",
     photoGeo: null,
   });
@@ -237,7 +240,7 @@ function Complaint() {
     return () => {
       try {
         recognition.stop();
-      } catch {}
+      } catch { }
     };
   }, [lang]);
 
@@ -267,7 +270,7 @@ function Complaint() {
     if (!rec) return;
     try {
       rec.stop();
-    } catch {}
+    } catch { }
     setIsListening(false);
   };
 
@@ -373,29 +376,6 @@ function Complaint() {
     }));
   };
 
-  const getDepartmentCode = (department) => {
-    const raw = String(department || "").split("-")[0].trim();
-    const normalized = raw.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
-
-    return normalized || "GEN";
-  };
-
-  const buildUniqueTrackingId = (department, existingIds) => {
-    const deptCode = getDepartmentCode(department);
-    let trackingId = "";
-
-    do {
-      const now = new Date();
-      const yy = String(now.getFullYear()).slice(-2);
-      const mm = String(now.getMonth() + 1).padStart(2, "0");
-      const dd = String(now.getDate()).padStart(2, "0");
-      const rand = Math.floor(1000 + Math.random() * 9000);
-      trackingId = `${deptCode}-${yy}${mm}${dd}-${rand}`;
-    } while (existingIds.has(trackingId));
-
-    return trackingId;
-  };
-
   // --- Submit ---
   const handleSubmit = async () => {
     if (!formData.name || !formData.phone || !formData.complaint) {
@@ -424,47 +404,71 @@ function Complaint() {
       return;
     }
 
+    // 1. Backend requires GPS coordinates for Duplicate Detection
+    if (!formData.photoGeo || !formData.photoGeo.latitude || !formData.photoGeo.longitude) {
+      alert("GPS Location is required to submit a complaint. Please allow location access or upload a photo with embedded GPS.");
+      return;
+    }
+
     try {
-    const response = await fetch("http://127.0.0.1:5000/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        complaint: formData.complaint,
-        area: formData.area,
-        name: formData.name,
+      const submitData = new FormData();
+      submitData.append("complaint_text", formData.complaint);
+      submitData.append("name", formData.name);
+      submitData.append("phone", formData.phone);
+
+      // 2. PERFECT TRANSMISSION: Send the email from the state, falling back to local storage
+      const finalEmail = formData.email || savedEmail;
+      submitData.append("email", finalEmail);
+
+      submitData.append("street", formData.street || "");
+      submitData.append("area", formData.area || "");
+      submitData.append("pin", formData.pin || "");
+
+      submitData.append("lat", formData.photoGeo.latitude);
+      submitData.append("lng", formData.photoGeo.longitude);
+
+      if (formData.image) {
+        const response = await fetch(formData.image);
+        const blob = await response.blob();
+        submitData.append("image", blob, "evidence.jpg");
+      }
+
+      const response = await fetch("http://127.0.0.1:5001/submit", {
+        method: "POST",
+        body: submitData
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(`Error: ${data.error}`);
+        return;
+      }
+
+      // Safe formatting for priority
+      const priorityScore = data.priority ? Number(data.priority).toFixed(2) : "N/A";
+      alert(`Complaint submitted successfully!\n\nRouted To: ${data.department_routed}\nPriority Score: ${priorityScore}\nTracking ID: ${data.trackingId}`);
+
+      // 3. PERFECT RESET: Keep the Name, Email, and Phone for the next complaint!
+      setFormData({
+        name: savedName,
         phone: formData.phone,
-        department: formData.department,
-        image: formData.image || ""
-      })
-    });
+        email: savedEmail,
+        street: "",
+        area: "",
+        pin: "",
+        filledBy: "",
+        filledByOther: "",
+        complaint: "",
+        image: "",
+        photoGeo: null,
+      });
 
-    const data = await response.json();
-
-    alert(`Complaint submitted!\nTracking ID: ${data.trackingId}`);
-
-    // Reset form after submit
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      street: "",
-      area: "",
-      pin: "",
-      filledBy: "",
-      filledByOther: "",
-      complaint: "",
-      department: "",
-      image: "",
-      photoGeo: null,
-    });
-
-  } catch (error) {
-    console.error(error);
-    alert("Error submitting complaint");
-  }
-};
+    } catch (error) {
+      console.error(error);
+      alert("Error connecting to the AI Backend. Is the Flask server running?");
+    }
+  };
 
   return (
     <motion.div
@@ -479,30 +483,6 @@ function Complaint() {
           <div>
             <h2 className="complaint-title">{L.title}</h2>
             <p className="complaint-subtitle">{L.subtitle}</p>
-          </div>
-
-          <div className="complaint-visual">
-            <img src="/images/complaint-intake.svg" alt={L.headerImageAlt} />
-          </div>
-
-          {/* Language toggle */}
-          <div className="lang-toggle language-toggle" role="group" aria-label={common.language}>
-            <button
-              className={lang === "en" ? "lang-btn language-toggle-btn active" : "lang-btn language-toggle-btn"}
-              onClick={() => { setLanguage("en"); setShowTamilKeyboard(false); }}
-              type="button"
-              title={common.toggleToEnglish}
-            >
-              {common.english}
-            </button>
-            <button
-              className={lang === "ta" ? "lang-btn language-toggle-btn active" : "lang-btn language-toggle-btn"}
-              onClick={() => setLanguage("ta")}
-              type="button"
-              title={common.toggleToTamil}
-            >
-              {common.tamil}
-            </button>
           </div>
         </div>
 
@@ -610,22 +590,6 @@ function Complaint() {
                 />
               </div>
             )}
-
-            <div className="field">
-              <label>{L.department}</label>
-              <select
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-              >
-                <option value="">{L.selectDept}</option>
-                {departmentOptions.map((department) => (
-                  <option key={department.value} value={department.value}>
-                    {lang === "ta" ? department.ta : department.en}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
 
           {/* Complaint + Voice */}

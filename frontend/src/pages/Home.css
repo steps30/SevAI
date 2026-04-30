@@ -165,18 +165,19 @@
 }
 
 .home2-hero-image {
-  border-radius: 16px;
-  padding: 12px;
-  display: grid;
-  place-items: center;
+  border: none;
+  background: transparent;
+  box-shadow: none;
 }
 
 .home2-hero-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  object-fit: contain;
+  border-radius: 0;
+  border: none;
+  /* Removed the ugly border */
+  background: transparent;
 }
 
 .home2-impact-strip {
@@ -546,6 +547,7 @@ html[data-theme="dark"] .footer-chip {
 }
 
 @media (max-width: 1080px) {
+
   .home2-hero-wrap,
   .home2-process-wrap,
   .home2-footer-grid {

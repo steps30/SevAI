@@ -11,11 +11,13 @@ function getPhotoGeoSourceLabel(source, labels) {
 }
 
 function buildPhotoGeoMapUrl(photoGeo) {
+  // Ensure we have valid coordinates before building the URL
   if (!photoGeo?.latitude || !photoGeo?.longitude) {
     return "";
   }
 
-  return `https://www.google.com/maps?q=${photoGeo.latitude},${photoGeo.longitude}`;
+  // FIXED: Standard, official Google Maps deep-link format
+  return `https://maps.google.com/?q=${photoGeo.latitude},${photoGeo.longitude}`;
 }
 
 function hasPhotoGeo(photoGeo) {

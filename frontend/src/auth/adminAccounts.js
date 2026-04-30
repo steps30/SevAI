@@ -1,44 +1,53 @@
+/**
+ * ⚠️ STRICT SYNC: The 'department' strings below are exact 1:1 copies 
+ * of the categories defined in the backend AI (nlp.py). 
+ * Do not alter these strings or the Admin Panel filters will fail.
+ */
+
 const ADMIN_ACCOUNTS = [
   {
-    adminId: "ADM-MAWS-01",
-    email: "maws.admin@sevai.in",
+    adminId: "ADM-MAYOR-00",
+    email: "mayor@sevai.in",
     password: "1234",
-    department: "MAWS - Water supply",
+    department: null, // SUPER ADMIN: Passing null bypasses the filter to show ALL tickets
   },
   {
     adminId: "ADM-PWD-01",
     email: "pwd.admin@sevai.in",
     password: "1234",
-    department: "PWD - Roads",
+    department: "Highways and Public Works Department (Roads, Potholes, Infrastructure, Pavement)",
   },
   {
     adminId: "ADM-ENERGY-01",
     email: "energy.admin@sevai.in",
     password: "1234",
-    department: "ENERGY - Electricity",
+    department: "Energy Department TANGEDCO (Electricity, Broken Wires, Power Poles, Transformers)",
   },
   {
-    adminId: "ADM-HEALTH-01",
-    email: "health.admin@sevai.in",
+    adminId: "ADM-MAWS-01",
+    email: "maws.admin@sevai.in",
     password: "1234",
-    department: "HEALTH - Public health",
+    department: "Municipal Administration and Water Supply (Garbage, Dead Animals, Fallen Trees, Sewage)",
   },
   {
-    adminId: "ADM-TRANS-01",
-    email: "trans.admin@sevai.in",
+    adminId: "ADM-POLICE-01",
+    email: "police.admin@sevai.in",
     password: "1234",
-    department: "TRANS - Transport",
-  },
-  {
-    adminId: "ADM-ENVFOR-01",
-    email: "envfor.admin@sevai.in",
-    password: "1234",
-    department: "ENVFOR - Environment",
-  },
+    department: "Home Prohibition and Traffic Police (Illegal Parking, Vandalism, Law Enforcement)",
+  }
 ];
 
 function findAdminAccountByEmail(email) {
   return ADMIN_ACCOUNTS.find((item) => item.email === email);
 }
 
-export { ADMIN_ACCOUNTS, findAdminAccountByEmail };
+// Function to verify login (simulating a backend check)
+function verifyAdminLogin(email, password) {
+  const account = findAdminAccountByEmail(email);
+  if (account && account.password === password) {
+    return account;
+  }
+  return null;
+}
+
+export { ADMIN_ACCOUNTS, findAdminAccountByEmail, verifyAdminLogin };

@@ -84,6 +84,16 @@ const translations = {
       copyright: "© 2026 SevAI. All rights reserved.",
       footerTagline: "Designed for accountable grievance resolution.",
       heroImageAlt: "Public grievance dashboard illustration",
+      trackCardTitle: "Track Your Complaint",
+      trackCardDesc: "Already filed a grievance? Enter your Complaint ID to get a real-time status update instantly.",
+      trackStat1Value: "Real-Time",
+      trackStat1Label: "Status Updates",
+      trackStat2Value: "End-to-End",
+      trackStat2Label: "Visibility",
+      trackBtn: "Track Complaint",
+      trackFaq1: "Your Complaint ID is emailed to you when you submit a grievance.",
+      trackFaq2: "Status updates from Pending to In Progress to Resolved are shown in real time.",
+      trackFaq3: "Admin remarks and department actions are visible at every stage of your complaint.",
     },
     login: {
       admin: "Admin",
@@ -128,6 +138,9 @@ const translations = {
       description: "Description",
       evidenceAlt: "Evidence",
       visualAlt: "Grievance operations dashboard visual",
+      publicPortal: "Public Transparency Portal",
+      portalDesc: "Live view of all city grievances, AI routing, and resolution status.",
+      activeWork: "Active Work"
     },
     admin: {
       title: "Admin Control Room",
@@ -319,6 +332,16 @@ const translations = {
       copyright: "© 2026 SevAI. அனைத்துரிமைகளும் பாதுகாக்கப்பட்டவை.",
       footerTagline: "பொறுப்பான குறைதீர் செயல்முறைக்காக வடிவமைக்கப்பட்டது.",
       heroImageAlt: "பொது குறைதீர் கட்டுப்பாட்டு பலகை படம்",
+      trackCardTitle: "புகாரை கண்காணிக்கவும்",
+      trackCardDesc: "ஏற்கனவே புகார் அளித்துள்ளீர்களா? உடனுக்குடன் நிலையை அறிய உங்கள் புகார் ID-ஐ உள்ளிடவும்.",
+      trackStat1Value: "உடனடி",
+      trackStat1Label: "நிலை புதுப்பிப்புகள்",
+      trackStat2Value: "முழுமையான",
+      trackStat2Label: "வெளிப்படைத்தன்மை",
+      trackBtn: "கண்காணி",
+      trackFaq1: "நீங்கள் புகார் அளிக்கும்போது உங்கள் புகார் ID மின்னஞ்சல் செய்யப்படும்.",
+      trackFaq2: "நிலுவையில் இருந்து தீர்க்கப்பட்டது வரையிலான நிலை மாற்றங்கள் உடனடியாக காட்டப்படும்.",
+      trackFaq3: "ஒவ்வொரு கட்டத்திலும் அதிகாரி குறிப்புகள் மற்றும் துறை சார்ந்த நடவடிக்கைகள் தெரியும்.",
     },
     login: {
       admin: "நிர்வாக",
@@ -363,6 +386,9 @@ const translations = {
       description: "விவரம்",
       evidenceAlt: "ஆதாரப் படம்",
       visualAlt: "குறைதீர் செயல்பாட்டு டாஷ்போர்டு படம்",
+      publicPortal: "பொது வெளிப்படைத்தன்மை தளம்",
+      portalDesc: "அனைத்து புகார்கள் மற்றும் AI ஒதுக்கீடுகளின் நேரடி பார்வை.",
+      activeWork: "செயல்பாட்டில்"
     },
     admin: {
       title: "நிர்வாக கட்டுப்பாட்டு அறை",
